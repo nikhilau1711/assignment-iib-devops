@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   api:
-    image: drone-telemetry
-    container_name: telemetry-api
+    image: drone-server
+    container_name: drone-server
     ports:
       - "3000:3000"
     environment:
@@ -19,7 +19,7 @@ services:
 
   mongo:
     image: mongo:latest
-    container_name: telemetry-mongo
+    container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
