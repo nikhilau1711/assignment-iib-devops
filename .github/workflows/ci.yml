@@ -52,7 +52,7 @@ jobs:
       # Step 8: Build Docker image with timestamp tag (IST)
       - name: Build Docker Image with timestamp tag
         run: |
-          TIMESTAMP=$(TZ=Asia/Kolkata date +%Y%m%d-%H%M%S)
+          TIMESTAMP=$(TZ=Asia/Kolkata date +%Y-%m-%d-%H-%M-%S)
           echo "IMAGE_TAG=$TIMESTAMP" >> $GITHUB_ENV
           docker build -t ${{ secrets.DOCKER_USERNAME }}/telemetry-api:$TIMESTAMP .
 
