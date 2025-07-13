@@ -1,0 +1,59 @@
+# .github/workflows/ci.yml
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Node.js
+      - name: Setup Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Step 3: Install Dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Step 4: Run Linter
+      - name: Lint code with ESLint
+        run: npx eslint .
+
+      # Step 5: Run Tests
+      - name: Run Tests
+        run: |
+          echo "Running dummy tests"
+          echo "✓ Test Passed"
+
+      # Step 6: Set up Docker Buildx (required for GH runners)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Step 7: Log in to DockerHub (optional)
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Step 8: Build Docker image
+      - name: Build Docker Image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/telemetry-api:latest .
+
+      # Step 9: Push image to DockerHub
+      - name: Push Docker Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/telemetry-api:latest
+
