@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  api:
+    image: drone-telemetry
+    container_name: telemetry-api
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MONGO_URI=mongodb://mongo:27017/telemetry
+    depends_on:
+      - mongo
+    logging:
+      driver: "json-file"
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:latest
+    container_name: telemetry-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - /mnt/mongo-data:/data/db
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - /mnt/prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - /mnt/grafana-data:/var/lib/grafana
+    restart: unless-stopped
+
+  elasticsearch:
+    image: bitnami/elasticsearch:8.11.3-debian-11-r0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - /mnt/elasticsearch-data:/bitnami/elasticsearch
+    restart: unless-stopped
+
+  logstash:
+    image: bitnami/logstash:8.11.3-debian-11-r0
+    container_name: logstash
+    ports:
+      - "5044:5044"
+    volumes:
+      - ./logstash.conf:/bitnami/logstash/pipeline/logstash.conf
+    restart: unless-stopped
+
+  kibana:
+    image: bitnami/kibana:8.11.3-debian-11-r0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.11.3
+    container_name: filebeat
+    user: root
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - logstash
+    restart: unless-stopped
+
