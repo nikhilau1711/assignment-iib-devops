@@ -49,11 +49,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Step 8: Build Docker image
-      - name: Build Docker Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/telemetry-api:latest .
+      # Step 8: Build Docker image with timestamp tag (IST)
+      - name: Build Docker Image with timestamp tag
+        run: |
+          TIMESTAMP=$(TZ=Asia/Kolkata date +%Y%m%d-%H%M%S)
+          echo "IMAGE_TAG=$TIMESTAMP" >> $GITHUB_ENV
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/telemetry-api:$TIMESTAMP .
 
-      # Step 9: Push image to DockerHub
-      - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/telemetry-api:latest
+      # Step 9: Push Docker Image (only timestamped tag)
+      - name: Push Docker Image with timestamp tag
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/telemetry-api:$IMAGE_TAG
 
