@@ -54,10 +54,11 @@ jobs:
         run: |
           TIMESTAMP=$(TZ=Asia/Kolkata date +%Y-%m-%d-%H-%M-%S)
           echo "IMAGE_TAG=$TIMESTAMP" >> $GITHUB_ENV
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/drone-server:$TIMESTAMP .
-
+          #docker build -t ${{ secrets.DOCKER_USERNAME }}/drone-server:$TIMESTAMP .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/drone-server:$TIMESTAMP \
+                 -t ${{ secrets.DOCKER_USERNAME }}/drone-server:latest .  
       # Step 9: Push Docker Image (only timestamped tag)
       - name: Push Docker Image with timestamp tag
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/drone-server:$IMAGE_TAG
-
+          docker push ${{ secrets.DOCKER_USERNAME }}/drone-server:latest
