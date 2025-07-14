@@ -1,14 +1,30 @@
-# Drone Telemetry Monitoring Stack
+🛰️ Project Overview
+This project delivers a complete CI/CD-enabled observability platform for a Node.js-based drone telemetry system using Docker, GitHub Actions, and popular monitoring and logging tools.
 
-This project provides a complete DevOps monitoring and telemetry solution for drone data. It includes:
+🔐 Security and Configuration
+GitHub Secrets are used to store sensitive credentials like Docker Hub username and token, ensuring no secrets are hardcoded.
 
-- A Node.js telemetry API server
-- MongoDB for storing telemetry
-- Prometheus + Grafana for metrics
-- Elasticsearch + Logstash + Kibana + Filebeat for log aggregation
-- GitHub Actions CI/CD pipelines for automatic image build and deployment
+Private DockerHub image hosting ensures controlled deployment artifacts.
 
----
+💾 Persistent Data
+All key services like MongoDB, Elasticsearch, Prometheus, and Grafana use mounted volumes under /mnt, ensuring data survives container restarts and recreations.
+
+⚙️ CI/CD Automation
+Fully automated zero-touch deployment using GitHub Actions:
+
+ci.yaml builds and pushes Docker images on each main branch push.
+
+deploy.yaml runs only on successful CI, deploying the image to a Linux GitHub runner via Docker Compose.
+
+Ensures clean separation of build and deploy phases with dependency checks and rollback-safe deployments.
+
+📊 Observability Stack
+Prometheus scrapes metrics from /metrics endpoint exposed by the Node.js app.
+
+Grafana dashboards visualize key metrics via Prometheus data source.
+
+ELK Stack (Elasticsearch, Logstash, Kibana, Filebeat) handles complete structured log aggregation and visualization.
+
 
 ## 📦 Project Structure
 
@@ -45,7 +61,7 @@ Deploys with docker compose up -d
 
 
 ---
-
+Docker Compose Services
 
 | Service         | Purpose             | Port  |
 | --------------- | ------------------- | ----- |
