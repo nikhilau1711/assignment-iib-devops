@@ -1,0 +1,60 @@
+# Drone Telemetry Assignment – Implementation Steps
+
+---
+
+## Local Application Setup
+
+1. Wrote `server.js` file to handle telemetry ingestion and metrics endpoints.
+2. Created `package.json` with dependencies like `express`, `mongoose`, and `prom-client`.
+3. Wrote a `Dockerfile` for containerizing the Node.js telemetry API.
+4. Built the Docker image for the server:
+
+   ```bash
+   docker build -t drone-server .
+   ```
+5. Created a `docker-compose.yml` to define the full observability and storage stack.
+6. Installed Docker Compose:
+
+   ```bash
+   apt install docker-compose
+   ```
+7. Started all containers in detached mode using Docker Compose:
+
+   ```bash
+   docker-compose up -d
+   ```
+8. Created `send-dummy-drone-data.sh` script to post dummy telemetry data periodically via `curl`.
+9. Verified MongoDB storage by connecting to the container:
+
+   ```bash
+   docker exec -it telemetry-mongo mongosh  
+   use telemetry  
+   db.telemetries.find().pretty()
+   ```
+10. Checked API health endpoint using:
+
+    ```bash
+    curl http://localhost:3000/health
+    ```
+11. Verified Prometheus metrics are exposed via:
+
+    ```bash
+    curl http://localhost:3000/metrics
+    ```
+12. Configured Prometheus to scrape metrics from `/metrics` every 15 seconds.
+13. Added Prometheus as a data source in Grafana for metrics visualization.
+14. Created a Grafana dashboard to monitor average response time, request count, and CPU usage.
+15. Configured ELK stack (Elasticsearch, Logstash, Kibana, Filebeat) for log collection and visualization.
+
+---
+
+## CI/CD Automation Setup
+
+1. Created a GitHub repository for the project source code.
+2. Uploaded application source code and Docker-related files to the repository.
+3. Added `ci.yaml` workflow in `.github/workflows/` to build and push Docker image to Docker Hub.
+4. Added `deploy.yaml` workflow to deploy the app stack on a self-hosted Linux GitHub runner.
+5. Achieved **end-to-end automation** from code push → CI validation → Docker image push → auto deployment.
+
+
+
