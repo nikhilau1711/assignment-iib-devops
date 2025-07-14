@@ -89,9 +89,6 @@ You must set the following secrets in Settings → Secrets → Actions:
 | `DOCKER_PASSWORD` | Docker Hub password/token |
 
 
-Local Development:
-# Start containers
-docker compose up -d
 
 # Access telemetry API
 curl http://localhost:3000/health
