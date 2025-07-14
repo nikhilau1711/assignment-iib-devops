@@ -104,3 +104,19 @@ Grafana: http://localhost:3001
 Kibana: http://localhost:5601
 
 Prometheus: http://localhost:9090
+
+
+🧩 Key Design Decisions
+Used host-mounted volumes to persist container data across restarts.
+
+Configured a Linux server as a self-hosted GitHub Actions runner for controlled deployments.
+
+Configured CD to always pull the latest Docker image from Docker Hub during deployment.
+
+Appended a timestamp tag to each Docker image for easy version traceability.
+
+Implemented multi-stage Docker builds to reduce final image size.
+
+Stored Docker credentials securely using GitHub Secrets, avoiding hardcoding sensitive data.
+
+
