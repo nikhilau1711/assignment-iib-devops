@@ -1,4 +1,5 @@
-🛰️ Project Overview
+# Drone Telemetry Monitoring Stack Project Overview
+
 This project delivers a complete CI/CD-enabled observability platform for a Node.js-based drone telemetry system using Docker, GitHub Actions, and popular monitoring and logging tools.
 
 🔐 Security and Configuration
@@ -7,9 +8,11 @@ GitHub Secrets are used to store sensitive credentials like Docker Hub username 
 Private DockerHub image hosting ensures controlled deployment artifacts.
 
 💾 Persistent Data
+
 All key services like MongoDB, Elasticsearch, Prometheus, and Grafana use mounted volumes under /mnt, ensuring data survives container restarts and recreations.
 
 ⚙️ CI/CD Automation
+
 Fully automated zero-touch deployment using GitHub Actions:
 
 ci.yaml builds and pushes Docker images on each main branch push.
@@ -19,6 +22,7 @@ deploy.yaml runs only on successful CI, deploying the image to a Linux GitHub ru
 Ensures clean separation of build and deploy phases with dependency checks and rollback-safe deployments.
 
 📊 Observability Stack
+
 Prometheus scrapes metrics from /metrics endpoint exposed by the Node.js app.
 
 Grafana dashboards visualize key metrics via Prometheus data source.
