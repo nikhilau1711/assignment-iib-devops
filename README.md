@@ -117,3 +117,8 @@ Implemented multi-stage Docker builds to reduce final image size.
 Stored Docker credentials securely using GitHub Secrets, avoiding hardcoding sensitive data.
 
 
+
+Infrastructure as Code (IaC)
+To automate infrastructure provisioning and environment setup, this project uses Terraform and Ansible. Terraform provisions a high-performance AWS EC2 instance (16 vCPU, 32 GB RAM), security groups, key pair, and an ECR repository with support for remote state via S3. After provisioning, Ansible configures the EC2 instance by installing Docker, setting up persistent storage, pulling the latest application image, and deploying the full Docker Compose stack automatically—ensuring a fully repeatable and hands-free deployment process.
+
+
