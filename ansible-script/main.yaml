@@ -1,0 +1,38 @@
+- name: Setup Drone Telemetry Environment
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name: [docker.io, docker-compose, curl]
+        state: present
+
+    - name: Add ubuntu user to docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    - name: Enable and start Docker
+      systemd:
+        name: docker
+        enabled: true
+        state: started
+
+    - name: Create data mount directories
+      file:
+        path: "/mnt/{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      loop:
+        - mongo-data
+        - prometheus-data
+        - grafana-data
+        - elasticsearch-data
